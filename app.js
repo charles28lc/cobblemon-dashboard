@@ -2,7 +2,7 @@
 const CONFIG = {
   address: "della-asm.tun.ply.gg",
   maxPlayers: 10,
-  statusApi: "https://api.mcsrvstat.us/3/",
+  statusApi: "https://api.mcstatus.io/v2/status/java/",
   refreshMs: 60_000,
 };
 
@@ -64,7 +64,7 @@ function render(data) {
   setStatus("online", "Online");
   $("count").textContent = `${online} / ${max}`;
 
-  const players = data.players?.list ?? [];
+  const players = (data.players?.list ?? []).map((p) => ({ name: p.name_clean ?? p.name, uuid: p.uuid }));
   if (players.length) {
     players.forEach((p) => list.append(playerRow(p)));
   } else if (online > 0) {

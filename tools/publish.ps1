@@ -46,7 +46,10 @@ try {
   $maps = @()
   if (Test-Path $mapsSrc) {
     $order = (Get-Content (Join-Path $blueWeb 'settings.json') -Raw | ConvertFrom-Json).maps
-    $maps = @($order | Where-Object { Test-Path (Join-Path $mapsSrc "$_\settings.json") })
+    $maps = @($order | Where-Object {
+      (Test-Path (Join-Path $mapsSrc "$_\settings.json")) -and
+      (Get-ChildItem (Join-Path $mapsSrc "$_\tiles") -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1)
+    })
   }
 
   $info = [ordered]@{ available = $false }
