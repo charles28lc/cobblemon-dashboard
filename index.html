@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cobblemon Server</title>
+  <meta name="description" content="Live status for our Cobblemon Minecraft server.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="brand">
+        <svg class="ball" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" class="ball-bottom"/>
+          <path d="M2 16a14 14 0 0 1 28 0z" class="ball-top"/>
+          <path d="M2 16h28" class="ball-line"/>
+          <circle cx="16" cy="16" r="4.5" class="ball-button"/>
+        </svg>
+        <div>
+          <h1>Cobblemon Server</h1>
+          <p class="tagline" id="tagline">A friends-only Cobblemon world</p>
+        </div>
+      </div>
+      <div class="status" id="status" data-state="loading" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="status-text">Checking…</span>
+      </div>
+    </header>
+
+    <section class="grid">
+      <article class="card players">
+        <div class="card-head">
+          <h2>Online now</h2>
+          <span class="count" id="count">– / 10</span>
+        </div>
+        <ul class="player-list" id="player-list"></ul>
+        <p class="empty" id="empty" hidden>Nobody's online right now.</p>
+        <p class="empty" id="offline-note" hidden>Server is offline.</p>
+      </article>
+
+      <article class="card info">
+        <h2>Server</h2>
+        <dl>
+          <div><dt>Minecraft</dt><dd>Java 1.21.1</dd></div>
+          <div><dt>Modpack</dt><dd>Cobblemon 1.8.1</dd></div>
+          <div><dt>Players</dt><dd id="max">Up to 10</dd></div>
+          <div><dt>Region</dt><dd>US East</dd></div>
+        </dl>
+      </article>
+
+      <article class="card map">
+        <div class="card-head">
+          <h2>World map</h2>
+          <span class="meta" id="map-updated"></span>
+        </div>
+        <div class="map-frame" id="map-frame">
+          <p class="empty" id="map-empty">The map fills in as players explore.</p>
+        </div>
+        <div class="map-foot">
+          <span class="meta">Surface only · explored areas only</span>
+          <a class="btn" id="map-link" href="map/" target="_blank" rel="noopener" hidden>Open full screen</a>
+        </div>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <span id="checked">Not checked yet</span>
+      <span>Status updates about every 5 minutes.</span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
