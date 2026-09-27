@@ -12,7 +12,7 @@ self.addEventListener("fetch", (event) => {
 
 async function fetchGz(url) {
   const gzUrl = new URL(url.pathname + ".gz", url.origin);
-  const res = await fetch(gzUrl);
+  const res = await fetch(gzUrl, { cache: "no-cache" });
   if (res.status === 404) return new Response(null, { status: 404 });
   if (!res.ok) return fetch(url);
   const type = url.pathname.endsWith(".json") ? "application/json" : "application/octet-stream";
