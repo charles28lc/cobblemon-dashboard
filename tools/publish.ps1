@@ -10,8 +10,13 @@ $stage   = Join-Path $env:TEMP 'cobblemon-pages-stage'
 $logFile = Join-Path $site 'publish.log'
 $remote  = 'https://github.com/charles28lc/cobblemon-dashboard.git'
 
+$env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
 $git = (Get-Command git -ErrorAction SilentlyContinue).Source
-if (-not $git) { $git = Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Links\git.exe' }
+if (-not $git) {
+  $git = Get-ChildItem (Join-Path $env:LOCALAPPDATA 'Microsoft\WinGet\Packages') -Filter git.exe -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.FullName -match 'Git\.MinGit.*\\cmd\\git\.exe$' } | Select-Object -First 1 -ExpandProperty FullName
+}
+if (-not $git) { throw 'git not found' }
 
 function Log($msg) {
   $line = "[{0}] {1}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $msg
