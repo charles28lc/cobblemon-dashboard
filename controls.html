@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Controls · Cobblemon Server</title>
+  <meta name="description" content="Default Cobblemon key bindings.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="brand">
+        <svg class="ball" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" class="ball-bottom"/>
+          <path d="M2 16a14 14 0 0 1 28 0z" class="ball-top"/>
+          <path d="M2 16h28" class="ball-line"/>
+          <circle cx="16" cy="16" r="4.5" class="ball-button"/>
+        </svg>
+        <div>
+          <h1>Cobblemon Server</h1>
+          <p class="tagline">Cobblemon controls</p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Pages">
+      <a href="./">Status</a>
+      <a href="commands.html">Commands</a>
+      <a href="controls.html" aria-current="page">Controls</a>
+    </nav>
+
+    <section class="grid">
+      <article class="card wide callout">
+        <h2>New here?</h2>
+        <p>Press <kbd>M</kbd> to pick your starter Pokémon. Until you have one, that's what <kbd>M</kbd> does.</p>
+      </article>
+
+      <article class="card wide">
+        <h2>Keys</h2>
+        <dl class="keys">
+          <div>
+            <dt><kbd>R</kbd></dt>
+            <dd>
+              <strong>Throw selected Pokémon</strong> — depends on what you're doing:
+              <ul>
+                <li>Looking at nothing or your own Pokémon: send it out, or recall it.</li>
+                <li>Looking at a wild Pokémon: start a battle.</li>
+                <li>Looking at another player: open the player menu.</li>
+                <li>In a battle: hide or show the battle screen.</li>
+                <li>Riding: get off.</li>
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt><kbd>↑</kbd> <kbd>↓</kbd></dt>
+            <dd><strong>Party shift up / down</strong> — choose which party Pokémon is selected.</dd>
+          </div>
+          <div>
+            <dt><kbd>M</kbd></dt>
+            <dd><strong>Open summary</strong> — stats and moves for your selected Pokémon.</dd>
+          </div>
+          <div>
+            <dt><kbd>O</kbd></dt>
+            <dd><strong>Hide party overlay</strong> — toggle the party bar on your screen.</dd>
+          </div>
+          <div>
+            <dt><kbd>Left Alt</kbd></dt>
+            <dd><strong>Riding freelook</strong> — hold while riding.</dd>
+          </div>
+        </dl>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <span>Cobblemon 1.8.1 defaults.</span>
+      <span>Change them in Options → Controls → Key Binds → Cobblemon.</span>
+    </footer>
+  </main>
+</body>
+</html>

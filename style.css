@@ -147,6 +147,32 @@ code {
 }
 
 .wide, .map { grid-column: 1 / -1; }
+
+.callout { border-left: 4px solid var(--accent); }
+.callout p { margin: 0; color: var(--text); }
+
+kbd {
+  display: inline-block;
+  min-width: 1.9em;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-bottom-width: 3px;
+  border-radius: 7px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: 700 .9rem/1.4 ui-monospace, "Cascadia Code", Consolas, monospace;
+  text-align: center;
+}
+
+.keys { display: grid; gap: 16px; }
+.keys > div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 12px; align-items: start; }
+.keys dt { display: flex; gap: 6px; flex-wrap: wrap; }
+.keys dd { margin: 0; text-align: left; font-weight: 400; color: var(--muted); }
+.keys dd strong { color: var(--text); }
+.keys ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 3px; }
+@media (max-width: 680px) {
+  .keys > div { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}
 .meta { color: var(--muted); font-size: .9rem; }
 
 .map-frame {
