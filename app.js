@@ -88,14 +88,20 @@ async function refresh() {
     stamp();
     return;
   }
+  let next = CONFIG.refreshMs;
   try {
     const res = await fetch(CONFIG.statusApi + encodeURIComponent(CONFIG.address), { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    render(await res.json());
+    const data = await res.json();
+    render(data);
+    // mcstatus.io caches each check for ~60 s; ask again right when a fresh one is available.
+    if (data.expires_at) next = Math.min(Math.max(data.expires_at - Date.now() + 1500, 5_000), 90_000);
   } catch {
     setStatus("loading", "Status unavailable");
+    next = 30_000;
   }
   stamp();
+  setTimeout(refresh, next);
 }
 
 function timeAgo(iso) {
@@ -131,4 +137,3 @@ async function setupMap() {
 $("max").textContent = `Up to ${CONFIG.maxPlayers}`;
 setupMap();
 refresh();
-setInterval(refresh, CONFIG.refreshMs);
