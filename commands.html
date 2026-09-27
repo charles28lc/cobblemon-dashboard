@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commands · Cobblemon Server</title>
+  <meta name="description" content="Commands every player can use on our Cobblemon server.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="brand">
+        <svg class="ball" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" class="ball-bottom"/>
+          <path d="M2 16a14 14 0 0 1 28 0z" class="ball-top"/>
+          <path d="M2 16h28" class="ball-line"/>
+          <circle cx="16" cy="16" r="4.5" class="ball-button"/>
+        </svg>
+        <div>
+          <h1>Cobblemon Server</h1>
+          <p class="tagline">Commands everyone can use</p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Pages">
+      <a href="./">Status</a>
+      <a href="commands.html" aria-current="page">Commands</a>
+    </nav>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Teleport</h2>
+        <dl class="cmds">
+          <div><dt><code>/tpa [player]</code></dt><dd>Ask to teleport to someone. Requests expire after 60 seconds.</dd></div>
+          <div><dt><code>/tpahere [player]</code></dt><dd>Ask someone to teleport to you.</dd></div>
+          <div><dt><code>/tpaccept</code> · <code>/tpdeny</code></dt><dd>Answer a request. Add a name to pick which one.</dd></div>
+          <div><dt><code>/tpcancel</code></dt><dd>Cancel a request you sent.</dd></div>
+          <div><dt><code>/spawn</code></dt><dd>Go to world spawn.</dd></div>
+          <div><dt><code>/back</code></dt><dd>Go back to where you were before your last teleport. Doesn't work after dying.</dd></div>
+        </dl>
+      </article>
+
+      <article class="card">
+        <h2>Home <span class="meta">1 per player</span></h2>
+        <dl class="cmds">
+          <div><dt><code>/home set [name]</code></dt><dd>Save where you're standing as your home. The name is optional.</dd></div>
+          <div><dt><code>/home tp [name]</code></dt><dd>Teleport home.</dd></div>
+          <div><dt><code>/home list</code></dt><dd>List your homes.</dd></div>
+          <div><dt><code>/home delete [name]</code></dt><dd>Delete a home.</dd></div>
+        </dl>
+      </article>
+
+      <article class="card">
+        <h2>Chat</h2>
+        <dl class="cmds">
+          <div><dt><code>/msg [player] [message]</code></dt><dd>Private message. <code>/w</code> and <code>/tell</code> do the same.</dd></div>
+          <div><dt><code>/me [action]</code></dt><dd>Say something in third person.</dd></div>
+          <div><dt><code>/list</code></dt><dd>See who's online.</dd></div>
+          <div><dt><code>/help</code></dt><dd>List every command you're allowed to use.</dd></div>
+        </dl>
+      </article>
+
+      <article class="card">
+        <h2>Other</h2>
+        <dl class="cmds">
+          <div><dt><code>/afk</code></dt><dd>Mark yourself as away. Happens on its own after 15 minutes idle.</dd></div>
+          <div><dt><code>/gametime</code></dt><dd>Show the in-game time.</dd></div>
+          <div><dt><code>/wastebin</code></dt><dd>Open a trash bin to delete items.</dd></div>
+          <div><dt><code>/suicide</code></dt><dd>Respawn if you're stuck. You drop your items like a normal death.</dd></div>
+          <div><dt><code>/warp list</code> · <code>/warp tp [name]</code></dt><dd>Warps are set by the host.</dd></div>
+        </dl>
+      </article>
+
+      <article class="card wide">
+        <h2>Pokémon</h2>
+        <p>Cobblemon is played through its own menus, not commands. The one player command is <code>/abandonmultiteam</code>, which leaves a multi-battle team.</p>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <span>Admin-only commands aren't listed.</span>
+      <span>Checked against the server's mods and config.</span>
+    </footer>
+  </main>
+</body>
+</html>

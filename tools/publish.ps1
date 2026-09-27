@@ -39,7 +39,7 @@ try {
   if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
   New-Item -ItemType Directory $stage | Out-Null
 
-  foreach ($f in 'index.html', 'style.css', 'app.js', 'favicon.svg') { Copy-Item (Join-Path $site $f) $stage }
+  foreach ($f in 'index.html', 'commands.html', 'style.css', 'app.js', 'favicon.svg') { Copy-Item (Join-Path $site $f) $stage }
   New-Item -ItemType File (Join-Path $stage '.nojekyll') | Out-Null
 
   $mapsSrc = $MapsDir

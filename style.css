@@ -116,7 +116,37 @@ h1 { margin: 0; font-size: 1.75rem; line-height: 1.2; }
 .card h2 { margin: 0 0 12px; font-size: 1.1rem; }
 .card p { margin: 0 0 14px; color: var(--muted); }
 
-.map { grid-column: 1 / -1; }
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: -8px 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+.tabs a {
+  padding: 8px 14px;
+  color: var(--muted);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.tabs a:hover { color: var(--text); }
+.tabs a[aria-current="page"] { color: var(--text); border-bottom-color: var(--accent); }
+.tabs a:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; border-radius: 6px; }
+
+.cmds { display: grid; gap: 12px; }
+.cmds div { display: block; }
+.cmds dt { color: var(--text); }
+.cmds dd { margin: 2px 0 0; text-align: left; font-weight: 400; color: var(--muted); font-size: .95rem; }
+code {
+  font: 600 .9rem/1.4 ui-monospace, "Cascadia Code", Consolas, monospace;
+  background: var(--surface-2);
+  padding: 1px 6px;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+
+.wide, .map { grid-column: 1 / -1; }
 .meta { color: var(--muted); font-size: .9rem; }
 
 .map-frame {
