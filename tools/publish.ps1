@@ -40,6 +40,16 @@ try {
   New-Item -ItemType Directory $stage | Out-Null
 
   foreach ($f in 'index.html', 'commands.html', 'style.css', 'app.js', 'favicon.svg') { Copy-Item (Join-Path $site $f) $stage }
+
+  # GitHub Pages lets browsers reuse files for 10 min; fingerprint CSS/JS links so new HTML never pairs with old CSS.
+  $ver = @{}
+  foreach ($a in 'style.css', 'app.js') { $ver[$a] = (Get-FileHash (Join-Path $stage $a) -Algorithm SHA256).Hash.Substring(0, 10).ToLower() }
+  foreach ($page in 'index.html', 'commands.html') {
+    $p = Join-Path $stage $page
+    $html = [IO.File]::ReadAllText($p)
+    foreach ($a in $ver.Keys) { $html = $html.Replace("=`"$a`"", "=`"$a`?v=$($ver[$a])`"") }
+    [IO.File]::WriteAllText($p, $html)
+  }
   New-Item -ItemType File (Join-Path $stage '.nojekyll') | Out-Null
 
   $mapsSrc = $MapsDir
