@@ -59,13 +59,16 @@
       <article class="card map">
         <div class="card-head">
           <h2>World map</h2>
-          <span class="meta" id="map-updated"></span>
+          <div class="seg" role="group" aria-label="Map view">
+            <button type="button" id="map-live" data-mode="live" disabled>Live</button>
+            <button type="button" id="map-snapshot" data-mode="snapshot" disabled>Snapshot</button>
+          </div>
         </div>
         <div class="map-frame" id="map-frame">
-          <p class="empty" id="map-empty">The map fills in as players explore.</p>
+          <p class="empty">The map fills in as players explore.</p>
         </div>
         <div class="map-foot">
-          <span class="meta">Surface only · explored areas only</span>
+          <span class="meta" id="map-updated">Surface only · explored areas only</span>
           <a class="btn" id="map-link" href="map/" target="_blank" rel="noopener" hidden>Open full screen</a>
         </div>
       </article>

@@ -3,6 +3,7 @@ const CONFIG = {
   address: "della-asm.tun.ply.gg",
   maxPlayers: 10,
   statusApi: "https://api.mcstatus.io/v2/status/java/",
+  liveMapUrl: "https://cobblemon.albacore-trout.ts.net/",
   refreshMs: 60_000,
 };
 
@@ -52,6 +53,9 @@ function render(data) {
   $("empty").hidden = true;
   $("offline-note").hidden = true;
 
+  mapState.online = Boolean(data.online);
+  applyMap();
+
   if (!data.online) {
     setStatus("offline", "Offline");
     $("count").textContent = `0 / ${CONFIG.maxPlayers}`;
@@ -98,6 +102,8 @@ async function refresh() {
     if (data.expires_at) next = Math.min(Math.max(data.expires_at - Date.now() + 1500, 5_000), 90_000);
   } catch {
     setStatus("loading", "Status unavailable");
+    mapState.online = false;
+    applyMap();
     next = 30_000;
   }
   stamp();
@@ -114,26 +120,77 @@ function timeAgo(iso) {
   return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
-async function setupMap() {
-  let info;
-  try {
-    const res = await fetch("map-info.json", { cache: "no-store" });
-    if (!res.ok) return;
-    info = await res.json();
-  } catch {
+// online: from the status check (null until the first one). snapshot: map-info.json. picked: user's choice.
+const mapState = { online: null, snapshot: null, picked: null, shown: undefined };
+
+function mapMode() {
+  const live = mapState.online === true;
+  const snap = Boolean(mapState.snapshot?.available);
+  if (mapState.picked === "live" && live) return "live";
+  if (mapState.picked === "snapshot" && snap) return "snapshot";
+  if (live) return "live";
+  if (snap) return "snapshot";
+  return null;
+}
+
+function applyMap() {
+  if (mapState.online === null || mapState.snapshot === null) return;
+  const mode = mapMode();
+
+  $("map-live").disabled = mapState.online !== true;
+  $("map-snapshot").disabled = !mapState.snapshot.available;
+  for (const id of ["map-live", "map-snapshot"]) {
+    $(id).setAttribute("aria-pressed", String($(id).dataset.mode === mode));
+  }
+
+  const privacy = "surface only · explored areas only";
+  if (mode === "live") {
+    $("map-updated").textContent = `Live · players shown · ${privacy}`;
+  } else if (mode === "snapshot") {
+    const when = mapState.snapshot.updated ? ` from ${timeAgo(mapState.snapshot.updated)}` : "";
+    $("map-updated").textContent = `Snapshot${when} · ${privacy}`;
+  } else {
+    $("map-updated").textContent = `Surface only · explored areas only`;
+  }
+
+  if (mode === mapState.shown) return;
+  mapState.shown = mode;
+
+  if (!mode) {
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = "The map fills in as players explore.";
+    $("map-frame").replaceChildren(p);
+    $("map-link").hidden = true;
     return;
   }
-  if (!info.available) return;
-
+  const src = mode === "live" ? CONFIG.liveMapUrl : "map/";
   const frame = document.createElement("iframe");
-  frame.src = "map/";
-  frame.title = "World map";
+  frame.src = src;
+  frame.title = mode === "live" ? "Live world map" : "World map snapshot";
   frame.loading = "lazy";
   $("map-frame").replaceChildren(frame);
+  $("map-link").href = src;
   $("map-link").hidden = false;
-  if (info.updated) $("map-updated").textContent = `Updated ${timeAgo(info.updated)}`;
+}
+
+async function loadSnapshotInfo() {
+  try {
+    const res = await fetch("map-info.json", { cache: "no-store" });
+    mapState.snapshot = res.ok ? await res.json() : { available: false };
+  } catch {
+    mapState.snapshot = { available: false };
+  }
+  applyMap();
+}
+
+for (const id of ["map-live", "map-snapshot"]) {
+  $(id).addEventListener("click", () => {
+    mapState.picked = $(id).dataset.mode;
+    applyMap();
+  });
 }
 
 $("max").textContent = `Up to ${CONFIG.maxPlayers}`;
-setupMap();
+loadSnapshotInfo();
 refresh();
