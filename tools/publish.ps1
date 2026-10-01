@@ -39,7 +39,7 @@ try {
   if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
   New-Item -ItemType Directory $stage | Out-Null
 
-  $pages = 'index.html', 'commands.html', 'controls.html'
+  $pages = 'index.html', 'join.html', 'commands.html', 'controls.html'
   foreach ($f in $pages + 'style.css', 'app.js', 'favicon.svg') { Copy-Item (Join-Path $site $f) $stage }
 
   # GitHub Pages lets browsers reuse files for 10 min; fingerprint CSS/JS links so new HTML never pairs with old CSS.

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Join · Cobblemon Server</title>
+  <meta name="description" content="How to install the modpack and join our Cobblemon server.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="brand">
+        <svg class="ball" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" class="ball-bottom"/>
+          <path d="M2 16a14 14 0 0 1 28 0z" class="ball-top"/>
+          <path d="M2 16h28" class="ball-line"/>
+          <circle cx="16" cy="16" r="4.5" class="ball-button"/>
+        </svg>
+        <div>
+          <h1>Cobblemon Server</h1>
+          <p class="tagline">How to join</p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Pages">
+      <a href="./">Status</a>
+      <a href="join.html" aria-current="page">Join</a>
+      <a href="commands.html">Commands</a>
+      <a href="controls.html">Controls</a>
+    </nav>
+
+    <section class="grid">
+      <article class="card wide callout">
+        <h2>Server address</h2>
+        <div class="address">
+          <code id="address">della-asm.tun.ply.gg</code>
+          <button type="button" class="btn btn-small" id="copy">Copy</button>
+        </div>
+        <p class="meta">No port needed. The server is whitelisted, so you need to be added before you can get in (step 1).</p>
+      </article>
+
+      <article class="card">
+        <h2>You'll need</h2>
+        <ul class="needs">
+          <li><strong>Minecraft: Java Edition</strong> on Windows, Mac or Linux. Bedrock, Xbox, PlayStation, Switch and phone versions can't join.</li>
+          <li>The free <a href="https://www.curseforge.com/download/app" target="_blank" rel="noopener">CurseForge app</a>.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Version must match</h2>
+        <dl>
+          <div><dt>Modpack</dt><dd>Cobblemon Official Modpack [Fabric]</dd></div>
+          <div><dt>Modpack version</dt><dd>1.8.1</dd></div>
+          <div><dt>Minecraft</dt><dd>1.21.1</dd></div>
+        </dl>
+      </article>
+
+      <article class="card wide">
+        <h2>Steps</h2>
+        <ol class="steps">
+          <li>
+            <strong>Get whitelisted.</strong>
+            Send the host your Minecraft Java username (the name shown in the launcher, exact spelling).
+          </li>
+          <li>
+            <strong>Install the modpack.</strong>
+            In CurseForge, open <em>Minecraft</em>, search modpacks for
+            <a href="https://www.curseforge.com/minecraft/modpacks/cobblemon-fabric" target="_blank" rel="noopener">Cobblemon Official Modpack [Fabric]</a>
+            by CobbledStudios, and click <em>Install</em>. Make sure it's version <strong>1.8.1</strong> (Minecraft 1.21.1), not the 1.20.1 one.
+          </li>
+          <li>
+            <strong>Give it enough memory.</strong>
+            CurseForge <em>Settings</em> → <em>Minecraft</em> → <em>Java Settings</em> → <em>Allocated Memory</em>: set it to
+            <strong>4–6 GB</strong> if your PC has 16 GB or more (the pack's minimum is about 3 GB).
+          </li>
+          <li>
+            <strong>Launch it.</strong>
+            Click <em>Play</em> on the modpack. The first launch takes a few minutes.
+          </li>
+          <li>
+            <strong>Add the server.</strong>
+            <em>Multiplayer</em> → <em>Add Server</em> → paste <code>della-asm.tun.ply.gg</code> into <em>Server Address</em> → <em>Done</em>.
+          </li>
+          <li>
+            <strong>Join.</strong>
+            Double-click the server. Your first time in, press <kbd>M</kbd> to pick your starter Pokémon.
+          </li>
+        </ol>
+      </article>
+
+      <article class="card wide">
+        <h2>If it doesn't work</h2>
+        <dl class="cmds">
+          <div><dt>"You are not whitelisted on this server"</dt><dd>You haven't been added yet, or the username was spelled differently. Message the host.</dd></div>
+          <div><dt>Errors about mods or versions</dt><dd>Your modpack version doesn't match. In CurseForge, switch the modpack to version 1.8.1.</dd></div>
+          <div><dt>"Can't connect" or "Timed out"</dt><dd>Check the <a href="./">Status</a> page. If it says Offline, the server is off right now.</dd></div>
+          <div><dt>Low FPS or stuttering</dt><dd>Give Minecraft more memory (step 3), and close other heavy programs.</dd></div>
+        </dl>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <span>Next: <a href="commands.html">Commands</a> · <a href="controls.html">Controls</a></span>
+      <span>Friends-only server.</span>
+    </footer>
+  </main>
+  <script>
+    document.getElementById("copy").addEventListener("click", async (e) => {
+      const btn = e.currentTarget;
+      try {
+        await navigator.clipboard.writeText(document.getElementById("address").textContent);
+        btn.textContent = "Copied";
+      } catch {
+        btn.textContent = "Select and copy";
+      }
+      setTimeout(() => { btn.textContent = "Copy"; }, 2000);
+    });
+  </script>
+</body>
+</html>
