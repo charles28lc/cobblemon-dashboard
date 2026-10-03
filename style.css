@@ -205,27 +205,6 @@ kbd {
 
 .card a:not(.btn), .foot a { color: var(--accent); }
 
-.seg {
-  display: inline-flex;
-  padding: 3px;
-  gap: 2px;
-  background: var(--surface-2);
-  border-radius: 10px;
-}
-.seg button {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: .9rem;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 7px;
-  cursor: pointer;
-}
-.seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
-.seg button:disabled { opacity: .45; cursor: not-allowed; }
-.seg button:focus-visible { outline: 3px solid var(--text); outline-offset: 1px; }
 
 .map-frame {
   height: 460px;

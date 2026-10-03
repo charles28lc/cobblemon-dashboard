@@ -110,87 +110,36 @@ async function refresh() {
   setTimeout(refresh, next);
 }
 
-function timeAgo(iso) {
-  const mins = Math.round((Date.now() - new Date(iso).getTime()) / 60_000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins} min ago`;
-  const hrs = Math.round(mins / 60);
-  if (hrs < 24) return `${hrs} hr${hrs === 1 ? "" : "s"} ago`;
-  const days = Math.round(hrs / 24);
-  return `${days} day${days === 1 ? "" : "s"} ago`;
-}
-
-// online: from the status check (null until the first one). snapshot: map-info.json. picked: user's choice.
-const mapState = { online: null, snapshot: null, picked: null, shown: undefined };
-
-function mapMode() {
-  const live = mapState.online === true;
-  const snap = Boolean(mapState.snapshot?.available);
-  if (mapState.picked === "live" && live) return "live";
-  if (mapState.picked === "snapshot" && snap) return "snapshot";
-  if (live) return "live";
-  if (snap) return "snapshot";
-  return null;
-}
+// The map is served live from the server PC, so it only exists while the server is on.
+// online: from the status check (null until the first one).
+const mapState = { online: null, shown: undefined };
 
 function applyMap() {
-  if (mapState.online === null || mapState.snapshot === null) return;
-  const mode = mapMode();
+  if (mapState.online === null) return;
+  const live = mapState.online === true;
+  $("map-updated").textContent = live
+    ? "Live · players shown · surface only · explored areas only"
+    : "Surface only · explored areas only";
 
-  $("map-live").disabled = mapState.online !== true;
-  $("map-snapshot").disabled = !mapState.snapshot.available;
-  for (const id of ["map-live", "map-snapshot"]) {
-    $(id).setAttribute("aria-pressed", String($(id).dataset.mode === mode));
-  }
+  if (live === mapState.shown) return;
+  mapState.shown = live;
 
-  const privacy = "surface only · explored areas only";
-  if (mode === "live") {
-    $("map-updated").textContent = `Live · players shown · ${privacy}`;
-  } else if (mode === "snapshot") {
-    const when = mapState.snapshot.updated ? ` from ${timeAgo(mapState.snapshot.updated)}` : "";
-    $("map-updated").textContent = `Snapshot${when} · ${privacy}`;
-  } else {
-    $("map-updated").textContent = `Surface only · explored areas only`;
-  }
-
-  if (mode === mapState.shown) return;
-  mapState.shown = mode;
-
-  if (!mode) {
+  if (!live) {
     const p = document.createElement("p");
     p.className = "empty";
-    p.textContent = "The map fills in as players explore.";
+    p.textContent = "The map is available while the server is online.";
     $("map-frame").replaceChildren(p);
     $("map-link").hidden = true;
     return;
   }
-  const src = mode === "live" ? CONFIG.liveMapUrl : "map/";
   const frame = document.createElement("iframe");
-  frame.src = src;
-  frame.title = mode === "live" ? "Live world map" : "World map snapshot";
+  frame.src = CONFIG.liveMapUrl;
+  frame.title = "Live world map";
   frame.loading = "lazy";
   $("map-frame").replaceChildren(frame);
-  $("map-link").href = src;
+  $("map-link").href = CONFIG.liveMapUrl;
   $("map-link").hidden = false;
 }
 
-async function loadSnapshotInfo() {
-  try {
-    const res = await fetch("map-info.json", { cache: "no-store" });
-    mapState.snapshot = res.ok ? await res.json() : { available: false };
-  } catch {
-    mapState.snapshot = { available: false };
-  }
-  applyMap();
-}
-
-for (const id of ["map-live", "map-snapshot"]) {
-  $(id).addEventListener("click", () => {
-    mapState.picked = $(id).dataset.mode;
-    applyMap();
-  });
-}
-
 $("max").textContent = `Up to ${CONFIG.maxPlayers}`;
-loadSnapshotInfo();
 refresh();

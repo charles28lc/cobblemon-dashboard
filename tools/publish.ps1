@@ -1,10 +1,10 @@
-# Builds the dashboard + a BlueMap snapshot and force-pushes it as a single commit to gh-pages.
+# Builds the dashboard (pages + Pokedex data) and force-pushes it as a single commit to gh-pages.
+# The world map is not published here; the dashboard embeds the live BlueMap via Tailscale Funnel.
 # Skips the push when nothing changed. Run by the hourly scheduled task; safe to run by hand.
-param([switch]$Force, [string]$MapsDir = 'C:\cobblemon-server\bluemap\web\maps')
+param([switch]$Force)
 
 $ErrorActionPreference = 'Stop'
 $site    = Split-Path $PSScriptRoot -Parent
-$blueWeb = 'C:\cobblemon-server\bluemap\web'
 $pub     = Join-Path $site '.publish'
 $stage   = Join-Path $env:TEMP 'cobblemon-pages-stage'
 $logFile = Join-Path $site 'publish.log'
@@ -56,63 +56,6 @@ try {
   }
   New-Item -ItemType File (Join-Path $stage '.nojekyll') | Out-Null
 
-  $mapsSrc = $MapsDir
-  $maps = @()
-  if (Test-Path $mapsSrc) {
-    $order = (Get-Content (Join-Path $blueWeb 'settings.json') -Raw | ConvertFrom-Json).maps
-    $maps = @($order | Where-Object {
-      (Test-Path (Join-Path $mapsSrc "$_\settings.json")) -and
-      (Get-ChildItem (Join-Path $mapsSrc "$_\tiles") -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1)
-    })
-  }
-
-  $info = [ordered]@{ available = $false }
-  if ($maps.Count -gt 0) {
-    $mapOut = Join-Path $stage 'map'
-    Mirror (Join-Path $blueWeb 'assets') (Join-Path $mapOut 'assets')
-    Mirror (Join-Path $blueWeb 'lang') (Join-Path $mapOut 'lang')
-    Copy-Item (Join-Path $PSScriptRoot 'map-sw.js') (Join-Path $mapOut 'sw.js')
-
-    $settings = Get-Content (Join-Path $blueWeb 'settings.json') -Raw | ConvertFrom-Json
-    $settings.maps = $maps
-    ($settings | ConvertTo-Json -Compress -Depth 10) | Set-Content (Join-Path $mapOut 'settings.json') -Encoding utf8
-
-    $html = Get-Content (Join-Path $blueWeb 'index.html') -Raw
-    $m = [regex]::Match($html, '<script type="module" crossorigin src="(\./assets/index-[^"]+\.js)"></script>')
-    if (-not $m.Success) { throw 'BlueMap index.html layout changed: module script tag not found' }
-    $loader = @"
-<script>
-(async () => {
-  if ("serviceWorker" in navigator) {
-    await navigator.serviceWorker.register("./sw.js");
-    if (!navigator.serviceWorker.controller) {
-      await new Promise((r) => navigator.serviceWorker.addEventListener("controllerchange", r, { once: true }));
-    }
-  }
-  const s = document.createElement("script");
-  s.type = "module";
-  s.src = "$($m.Groups[1].Value)";
-  document.head.append(s);
-})();
-</script>
-"@
-    $html.Replace($m.Value, $loader) | Set-Content (Join-Path $mapOut 'index.html') -Encoding utf8
-
-    $newest = [datetime]::MinValue
-    foreach ($id in $maps) {
-      $dst = Join-Path $mapOut "maps\$id"
-      Mirror (Join-Path $mapsSrc $id) $dst @('rstate')
-      $live = Join-Path $dst 'live'
-      New-Item -ItemType Directory -Force $live | Out-Null
-      '{"players":[]}' | Set-Content (Join-Path $live 'players.json') -Encoding ascii -NoNewline
-      $t = (Get-ChildItem (Join-Path $dst 'tiles') -Recurse -File -ErrorAction SilentlyContinue | Measure-Object LastWriteTime -Maximum).Maximum
-      if ($t -and $t -gt $newest) { $newest = $t }
-    }
-    $info.available = $true
-    if ($newest -gt [datetime]::MinValue) { $info.updated = $newest.ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ') }
-  }
-  ($info | ConvertTo-Json -Compress) | Set-Content (Join-Path $stage 'map-info.json') -Encoding ascii -NoNewline
-
   if (-not (Test-Path (Join-Path $pub '.git'))) {
     New-Item -ItemType Directory -Force $pub | Out-Null
     & $git init -q -b gh-pages $pub
@@ -136,7 +79,7 @@ try {
   Git gc -q --prune=now
 
   $mb = [math]::Round((Get-ChildItem $stage -Recurse -File | Measure-Object Length -Sum).Sum / 1MB, 1)
-  Log "Published: maps=[$($maps -join ', ')] size=${mb}MB"
+  Log "Published: size=${mb}MB"
 }
 catch {
   Log "FAILED: $($_.Exception.Message)"
