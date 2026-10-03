@@ -44,8 +44,33 @@ function playerRow(p) {
   const name = document.createElement("span");
   name.textContent = p.name || "Unknown player";
 
-  li.append(img, name);
+  const afk = document.createElement("span");
+  afk.className = "afk-badge";
+  afk.textContent = "AFK";
+
+  li.dataset.name = (p.name || "").toLowerCase();
+  li.append(img, name, afk);
   return li;
+}
+
+// AFK names are published by the server PC (tools\afk-status.ps1 → afk.js, served at the live-map address).
+// Loaded with a <script> tag because that server sends no CORS headers, so fetch() can't read it.
+let afkNames = new Set();
+function markAfk() {
+  for (const li of $("player-list").children) li.classList.toggle("is-afk", afkNames.has(li.dataset.name));
+}
+window.cobblemonAfk = (data) => {
+  afkNames = new Set((data.afk || []).map((n) => n.toLowerCase()));
+  markAfk();
+};
+function loadAfk() {
+  document.getElementById("afk-script")?.remove();
+  if (mapState.online !== true || new URLSearchParams(location.search).has("demo")) return;
+  const s = document.createElement("script");
+  s.id = "afk-script";
+  s.src = new URL(`afk.js?t=${Date.now()}`, CONFIG.liveMapUrl).href;
+  s.onerror = () => s.remove();
+  document.head.append(s);
 }
 
 function render(data) {
@@ -72,6 +97,8 @@ function render(data) {
   const players = (data.players?.list ?? []).map((p) => ({ name: p.name_clean ?? p.name, uuid: p.uuid }));
   if (players.length) {
     players.forEach((p) => list.append(playerRow(p)));
+    markAfk();
+    loadAfk();
   } else if (online > 0) {
     const li = document.createElement("li");
     li.textContent = `${online} player${online === 1 ? "" : "s"} online`;
@@ -90,6 +117,7 @@ async function refresh() {
   const demo = new URLSearchParams(location.search).get("demo");
   if (demo && DEMO[demo]) {
     render(DEMO[demo]);
+    window.cobblemonAfk({ afk: ["Alex"] });   // preview the AFK badge
     stamp();
     return;
   }
