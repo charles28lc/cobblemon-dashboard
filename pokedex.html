@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokédex · Cobblemon Server</title>
+  <meta name="description" content="Everyone's combined Pokédex progress on our Cobblemon server.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="brand">
+        <svg class="ball" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" class="ball-bottom"/>
+          <path d="M2 16a14 14 0 0 1 28 0z" class="ball-top"/>
+          <path d="M2 16h28" class="ball-line"/>
+          <circle cx="16" cy="16" r="4.5" class="ball-button"/>
+        </svg>
+        <div>
+          <h1>Cobblemon Server</h1>
+          <p class="tagline">Everyone's Pokédex, combined</p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Pages">
+      <a href="./">Status</a>
+      <a href="pokedex.html" aria-current="page">Pokédex</a>
+      <a href="join.html">Join</a>
+      <a href="commands.html">Commands</a>
+      <a href="controls.html">Controls</a>
+    </nav>
+
+    <section class="grid">
+      <article class="card wide">
+        <div class="card-head">
+          <h2>Server progress</h2>
+          <span class="meta" id="dex-updated"></span>
+        </div>
+        <div class="dex-total">
+          <div class="dex-big"><span id="dex-caught">–</span><span class="meta"> / <span id="dex-total">–</span> caught by someone</span></div>
+          <div class="bar" role="progressbar" id="dex-bar" aria-valuemin="0" aria-valuemax="100"><span id="dex-bar-fill"></span></div>
+          <p class="meta" id="dex-seen"></p>
+        </div>
+        <h3 class="dex-sub">Trainers</h3>
+        <ul class="trainers" id="trainers"></ul>
+      </article>
+
+      <article class="card wide">
+        <div class="dex-controls">
+          <label class="field">
+            <span>Search</span>
+            <input type="search" id="f-search" placeholder="Name or number" autocomplete="off">
+          </label>
+          <label class="field">
+            <span>Trainer</span>
+            <select id="f-player"><option value="">Everyone</option></select>
+          </label>
+          <label class="field">
+            <span>Generation</span>
+            <select id="f-gen">
+              <option value="">All</option>
+              <option value="1">Gen 1 · Kanto</option>
+              <option value="2">Gen 2 · Johto</option>
+              <option value="3">Gen 3 · Hoenn</option>
+              <option value="4">Gen 4 · Sinnoh</option>
+              <option value="5">Gen 5 · Unova</option>
+              <option value="6">Gen 6 · Kalos</option>
+              <option value="7">Gen 7 · Alola</option>
+              <option value="8">Gen 8 · Galar</option>
+              <option value="9">Gen 9 · Paldea</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Show</span>
+            <select id="f-show">
+              <option value="">All</option>
+              <option value="caught">Caught</option>
+              <option value="seen">Seen, not caught</option>
+              <option value="missing">Not caught</option>
+            </select>
+          </label>
+        </div>
+        <div class="dex-legend meta">
+          <span><i class="lg lg-caught"></i>Caught</span>
+          <span><i class="lg lg-seen"></i>Seen</span>
+          <span><i class="lg lg-none"></i>Not found yet</span>
+          <span id="dex-count"></span>
+        </div>
+        <div class="dex-grid" id="dex-grid" aria-live="polite">
+          <p class="empty">Loading the Pokédex…</p>
+        </div>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <span>Hover or tap a Pokémon to see who's caught it.</span>
+      <span>Updates hourly from the server's save files.</span>
+    </footer>
+  </main>
+  <div class="dex-tip" id="dex-tip" role="tooltip" hidden></div>
+  <script src="pokedex.js"></script>
+</body>
+</html>

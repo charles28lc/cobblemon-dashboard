@@ -39,12 +39,15 @@ try {
   if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
   New-Item -ItemType Directory $stage | Out-Null
 
-  $pages = 'index.html', 'join.html', 'commands.html', 'controls.html'
-  foreach ($f in $pages + 'style.css', 'app.js', 'favicon.svg') { Copy-Item (Join-Path $site $f) $stage }
+  $pages = 'index.html', 'pokedex.html', 'join.html', 'commands.html', 'controls.html'
+  foreach ($f in $pages + 'style.css', 'app.js', 'pokedex.js', 'species.json', 'favicon.svg') { Copy-Item (Join-Path $site $f) $stage }
+
+  # Combined Pokedex (player names only, no UUIDs). Deterministic, so it only triggers a push when someone's dex changed.
+  & (Join-Path $PSScriptRoot 'pokedex-data.ps1') -OutFile (Join-Path $stage 'pokedex-data.json')
 
   # GitHub Pages lets browsers reuse files for 10 min; fingerprint CSS/JS links so new HTML never pairs with old CSS.
   $ver = @{}
-  foreach ($a in 'style.css', 'app.js') { $ver[$a] = (Get-FileHash (Join-Path $stage $a) -Algorithm SHA256).Hash.Substring(0, 10).ToLower() }
+  foreach ($a in 'style.css', 'app.js', 'pokedex.js') { $ver[$a] = (Get-FileHash (Join-Path $stage $a) -Algorithm SHA256).Hash.Substring(0, 10).ToLower() }
   foreach ($page in $pages) {
     $p = Join-Path $stage $page
     $html = [IO.File]::ReadAllText($p)
