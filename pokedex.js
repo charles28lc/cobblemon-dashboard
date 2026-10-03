@@ -52,6 +52,7 @@ function renderSummary() {
     btn.dataset.player = p.i;
     btn.innerHTML = `<span class="t-name"></span><span class="t-num"><strong>${p.caught}</strong> caught · ${p.seen} seen</span><span class="bar small"><span style="width:${(p.caught / best) * 100}%"></span></span>`;
     btn.querySelector(".t-name").textContent = p.name;
+    btn.title = p.name;   // full name on hover if it's cut off
     btn.addEventListener("click", () => {
       $("f-player").value = $("f-player").value === String(p.i) ? "" : String(p.i);
       applyFilters();
