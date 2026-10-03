@@ -26,7 +26,12 @@ function Log($msg) {
   if ($all.Count -gt 300) { $all | Select-Object -Last 300 | Set-Content $logFile }
 }
 
-function Git { & $git -C $pub @args; if ($LASTEXITCODE -ne 0) { throw "git $($args -join ' ') failed ($LASTEXITCODE)" } }
+function Git {
+  $env:GIT_TERMINAL_PROMPT = '0'   # never wait for a password prompt in the headless task
+  $out = & $git -C $pub @args 2>&1
+  if ($LASTEXITCODE -ne 0) { throw "git $($args -join ' ') failed ($LASTEXITCODE): $((@($out) | ForEach-Object { "$_" }) -join ' | ')" }
+  $out
+}
 
 function Mirror($from, $to, [string[]]$excludeDirs = @()) {
   $opts = @('/MIR', '/R:2', '/W:1', '/NFL', '/NDL', '/NJH', '/NJS', '/NP')
