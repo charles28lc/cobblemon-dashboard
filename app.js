@@ -1,6 +1,7 @@
 // The address is needed for the status lookup; it is intentionally not displayed on the page.
 const CONFIG = {
-  address: "della-asm.tun.ply.gg",
+  // Explicit Playit port: mcstatus.io's SRV lookup for the bare hostname is unreliable (10-03 it fell back to 25565 and said Offline).
+  address: "della-asm.tun.ply.gg:37562",
   maxPlayers: 10,
   statusApi: "https://api.mcstatus.io/v2/status/java/",
   liveMapUrl: "https://cobblemon.albacore-trout.ts.net/",
